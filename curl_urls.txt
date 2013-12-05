@@ -1,0 +1,1 @@
+curl -X POST -H "Content-Type: application/json" -d '{"username":"Peter","remaining_time":"20:00", "status":"active","group":"JBMobile"}' http://localhost:5000/update
