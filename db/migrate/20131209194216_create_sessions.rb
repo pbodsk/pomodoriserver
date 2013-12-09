@@ -1,15 +1,15 @@
 class CreateSessions < ActiveRecord::Migration
-  def up    
-    create_table :pomodorisessions do |t|
+  def up
+    create_table :sessions do |t|
       t.string :username
-      t.string :remaining_time
+      t.string :remainingtime
       t.string :status
       t.string :group
-      t.timestamp :updated_at
+      t.timestamps
     end
   end
 
   def down
-    drop_table :pomodorisessions
+    drop_table :sessions
   end
 end
