@@ -30,7 +30,7 @@ def save_session(session)
 end
 
 def generate_return_json(session)
-  Session.where(updated_at: 2.minutes.ago, group: session.group).destroy_all
-  sessions = Session.find_by group: session.group
+  Session.where("updated_at < ?", 2.minutes.ago).where(group: session.group).destroy_all
+  sessions = Session.where(group: session.group)
   sessions.to_json  
 end
