@@ -10,7 +10,9 @@ end
 
 post '/update' do
   content_type :json
-  @input_data = JSON.parse(request.body.read)
+  #to be used with cURL calls
+#  @input_data = JSON.parse(request.body.read)
+  @input_data = params
   username = @input_data['username']
   group = @input_data['group']
   session = Session.find_by username: username, group: group
