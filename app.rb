@@ -18,6 +18,7 @@ post '/update' do
   session = Session.find_by username: username, group: group
   if(session)
     session.remainingtime = @input_data['remainingtime']
+    session.status = @input_data['status']
     session.touch
   else
     session = Session.new(@input_data)
