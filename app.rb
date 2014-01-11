@@ -38,6 +38,11 @@ post '/remove' do
   end
 end
 
+get 'fetch' do
+  @group = params[:group]
+  
+end
+
 private
 def read_params
   @username = @input_data['username']
@@ -50,11 +55,11 @@ end
 
 def save_session(session)
   session.save
-  generate_return_json(session)
+  #generate_return_json(session)
 end
 
 def generate_return_json(session)
-  Session.where("updated_at < ?", 2.minutes.ago).where(group: session.group).destroy_all
-  sessions = Session.where(group: session.group)
+  Session.where("updated_at < ?", 2.minutes.ago).where(group: @group).destroy_all
+  sessions = Session.where(group: @group)
   sessions.to_json  
 end
