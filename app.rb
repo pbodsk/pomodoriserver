@@ -31,6 +31,7 @@ post '/remove' do
 end
 
 get '/fetch' do
+  content_type :json
   @group = params[:group]
   generate_return_json
 end
@@ -62,5 +63,6 @@ end
 def generate_return_json
   Session.where("updated_at < ?", 2.minutes.ago).where(group: @group).destroy_all
   sessions = Session.where(group: @group)
+  puts "sessions: #{sessions}, to_json: #{sessions.to_json}"
   sessions.to_json  
 end
