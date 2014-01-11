@@ -1,5 +1,6 @@
 curl -X POST -H "Content-Type: application/json" -d '{"username":"Peter","remainingtime":"20:00", "status":"active","group":"JBMobile"}' http://localhost:5000/update
 curl -X POST -H "Content-Type: application/json" -d '{"username":"Peter","remainingtime":"20:00", "status":"active","group":"JBMobile"}' http://localhost:5000/remove
+curl -X GET http://localhost:5000/fetch?group=JBMobile
 curl -X POST -H "Content-Type: application/json" -d '{"username":"Pia","remainingtime":"17:00", "status":"active","group":"JBMobile"}' http://localhost:5000/update
 curl -X POST -H "Content-Type: application/json" -d '{"username":"Pia","remainingtime":"17:00", "status":"active","group":"JBMobile"}' http://limitless-island-2966.herokuapp.com/update
 curl -X POST -H "Content-Type: application/json" -d '{"username":"Peter","remainingtime":"16:00", "status":"active","group":"JBMobile"}' http://limitless-island-2966.herokuapp.com/update

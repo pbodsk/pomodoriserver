@@ -10,10 +10,7 @@ end
 
 post '/update' do
   content_type :json
-  #to be used with cURL calls
-#  @input_data = JSON.parse(request.body.read)
-  @input_data = params
-  read_params
+  read_params(params, request)
   session = find_session
   if(session)
     session.remainingtime = @input_data['remainingtime']
@@ -27,24 +24,28 @@ end
 
 post '/remove' do
   content_type :json
-  #to be used with cURL calls
-#  @input_data = JSON.parse(request.body.read) 
-  @input_data = params
-  read_params
+  read_params(params, request)
   session = find_session
-  if session
-    session.destroy
-    session.to_json
-  end
+  session.destroy if session
+  session.to_json
 end
 
-get 'fetch' do
+get '/fetch' do
   @group = params[:group]
-  
+  generate_return_json
 end
 
 private
-def read_params
+def read_params(params, request)
+  if params.length > 0
+    @input_data = params
+  else
+    @input_data = JSON.parse(request.body.read)
+  end
+  map_params
+end
+
+def map_params
   @username = @input_data['username']
   @group = @input_data['group'] 
 end
@@ -55,10 +56,10 @@ end
 
 def save_session(session)
   session.save
-  #generate_return_json(session)
+  session.to_json
 end
 
-def generate_return_json(session)
+def generate_return_json
   Session.where("updated_at < ?", 2.minutes.ago).where(group: @group).destroy_all
   sessions = Session.where(group: @group)
   sessions.to_json  
