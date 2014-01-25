@@ -5,7 +5,9 @@ require './models/session'
 require 'json'
 
 get '/' do 
-  "Hello World"
+#  Session.all.each do |session|
+#    erb :session
+#  end
 end
 
 post '/update' do
@@ -60,9 +62,35 @@ def save_session(session)
   session.to_json
 end
 
-def generate_return_json
+def remove_old_sessions_and_get_active_sessions_in_group
+  remove_old_sessions
+  get_active_sessions_in_group
+end
+
+def remove_old_sessions
   Session.where("updated_at < ?", 2.minutes.ago).where(group: @group).destroy_all
-  sessions = Session.where(group: @group)
-  puts "sessions: #{sessions}, to_json: #{sessions.to_json}"
+end
+
+def get_active_sessions_in_group
+  Session.where(group: @group)
+end
+
+def generate_return_json
+  sessions = remove_old_sessions_and_get_active_sessions_in_group
   sessions.to_json  
 end
+
+__END__
+
+#layout
+@@ layout
+<html>
+<body>
+  <ul>
+  <%= yield %>
+</ul>
+</body>
+</html>
+
+@@ session
+<li><%= session.username%></li>
