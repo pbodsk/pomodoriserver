@@ -28,8 +28,12 @@ post '/remove' do
   content_type :json
   read_params(params, request)
   session = find_session
-  session.destroy if session
-  session.to_json
+  if session
+    session.destroy 
+    session.to_json
+  else
+    Array.new.to_json
+  end
 end
 
 get '/fetch' do
@@ -72,7 +76,7 @@ def remove_old_sessions
 end
 
 def get_active_sessions_in_group
-  Session.where(group: @group)
+  Session.where(group: @group).order(remainingtime: :asc)
 end
 
 def generate_return_json
