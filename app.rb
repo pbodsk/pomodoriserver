@@ -5,9 +5,8 @@ require './models/session'
 require 'json'
 
 get '/' do 
-#  Session.all.each do |session|
-#    erb :session
-#  end
+  active_sessions = Session.all
+  erb :session_template, :locals => {:active_sessions => active_sessions}
 end
 
 post '/update' do
@@ -89,12 +88,34 @@ __END__
 #layout
 @@ layout
 <html>
+<head>
+  <title>All active sessions</title>
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
 <body>
-  <ul>
-  <%= yield %>
-</ul>
+  <h1>All active sessions</h1>
+  <table>
+    <thead>
+      <tr>
+        <td>Username</td>
+        <td>Remaining time</td>
+        <td>Status</td>
+        <td>Group</td>
+      </tr>
+    </thead>
+    <tbody>
+      <%= yield %>
+    </tbody>
+</table>
 </body>
 </html>
 
-@@ session
-<li><%= session.username%></li>
+@@ session_template
+<% active_sessions.each do |session| %>
+  <tr>
+    <td><%= session.username %></td>
+    <td><%= session.remainingtime %></td>
+    <td><%= session.status %></td>
+    <td><%= session.group %></td>
+  </tr>
+<% end %>
