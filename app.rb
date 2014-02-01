@@ -106,20 +106,26 @@ __END__
   <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 <body>
-  <h1>All active sessions</h1>
-  <table>
-    <thead>
-      <tr>
-        <td>Username</td>
-        <td>Remaining time</td>
-        <td>Status</td>
-        <td>Group</td>
-      </tr>
-    </thead>
-    <tbody>
-      <%= yield %>
-    </tbody>
-</table>
+  <div id="contentContainer" class="centerAligned">
+    <h1>All active sessions</h1>
+    <table class="centerAligned">
+      <thead>
+        <tr>
+          <td>Username</td>
+          <td>Remaining time</td>
+          <td>Status</td>
+          <td>Group</td>
+        </tr>
+      </thead>
+      <tbody>
+        <%= yield %>
+      </tbody>  
+    </table>
+    <p class="centerAligned">Page reloads automatically every 10 seconds...what an age we live in!</p>
+  </div>
+  <script type="text/javascript">
+    setInterval(function(){location.reload()}, 10000);
+  </script>
 </body>
 </html>
 
