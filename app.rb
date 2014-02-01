@@ -66,11 +66,11 @@ def save_session(session)
 end
 
 def remove_old_sessions_and_get_active_sessions_in_group
-  remove_old_sessions
+  remove_old_sessions_in_group
   get_active_sessions_in_group
 end
 
-def remove_old_sessions
+def remove_old_sessions_in_group
   Session.where("updated_at < ?", 2.minutes.ago).where(group: @group).destroy_all
 end
 
