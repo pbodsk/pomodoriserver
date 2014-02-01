@@ -5,6 +5,7 @@ require './models/session'
 require 'json'
 
 get '/' do 
+  remove_old_sessions
   active_sessions = Session.all
   erb :session_template, :locals => {:active_sessions => active_sessions}
 end
@@ -70,8 +71,20 @@ def remove_old_sessions_and_get_active_sessions_in_group
   get_active_sessions_in_group
 end
 
+#TODO: refactor these two methods into one
 def remove_old_sessions_in_group
-  Session.where("updated_at < ?", 2.minutes.ago).where(group: @group).destroy_all
+  candidates = find_old_sessions
+  candidates.where(group: @group).destroy_all
+end
+
+#TODO: refactor these two methods into one
+def remove_old_sessions
+  candidates = find_old_sessions
+  candidates.destroy_all
+end
+
+def find_old_sessions
+  Session.where("updated_at < ?", 2.minutes.ago)
 end
 
 def get_active_sessions_in_group
