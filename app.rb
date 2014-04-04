@@ -5,9 +5,9 @@ require './models/session'
 require 'json'
 
 get '/' do 
-#  Session.all.each do |session|
-#    erb :session
-#  end
+  remove_old_sessions
+  active_sessions = Session.all
+  erb :session_template, :locals => {:active_sessions => active_sessions}
 end
 
 post '/update' do
@@ -67,12 +67,24 @@ def save_session(session)
 end
 
 def remove_old_sessions_and_get_active_sessions_in_group
-  remove_old_sessions
+  remove_old_sessions_in_group
   get_active_sessions_in_group
 end
 
+#TODO: refactor these two methods into one
+def remove_old_sessions_in_group
+  candidates = find_old_sessions
+  candidates.where(group: @group).destroy_all
+end
+
+#TODO: refactor these two methods into one
 def remove_old_sessions
-  Session.where("updated_at < ?", 2.minutes.ago).where(group: @group).destroy_all
+  candidates = find_old_sessions
+  candidates.destroy_all
+end
+
+def find_old_sessions
+  Session.where("updated_at < ?", 2.minutes.ago)
 end
 
 def get_active_sessions_in_group
@@ -89,12 +101,40 @@ __END__
 #layout
 @@ layout
 <html>
+<head>
+  <title>All active sessions</title>
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
 <body>
-  <ul>
-  <%= yield %>
-</ul>
+  <div id="contentContainer" class="centerAligned">
+    <h1>All active sessions</h1>
+    <table class="centerAligned">
+      <thead>
+        <tr>
+          <td>Username</td>
+          <td>Remaining time</td>
+          <td>Status</td>
+          <td>Group</td>
+        </tr>
+      </thead>
+      <tbody>
+        <%= yield %>
+      </tbody>  
+    </table>
+    <p class="centerAligned">Page reloads automatically every 10 seconds...what an age we live in!</p>
+  </div>
+  <script type="text/javascript">
+    setInterval(function(){location.reload()}, 10000);
+  </script>
 </body>
 </html>
 
-@@ session
-<li><%= session.username%></li>
+@@ session_template
+<% active_sessions.each do |session| %>
+  <tr>
+    <td><%= session.username %></td>
+    <td><%= session.remainingtime %></td>
+    <td><%= session.status %></td>
+    <td><%= session.group %></td>
+  </tr>
+<% end %>
